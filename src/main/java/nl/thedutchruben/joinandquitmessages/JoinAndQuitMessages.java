@@ -4,7 +4,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JoinAndQuitMessages extends JavaPlugin {
     private static JoinAndQuitMessages instance;
-    public String joinmessage,quitmessage;
+    private String joinmessage;
+    private String quitmessage;
+    
     @Override
     public void onEnable() {
         instance =this;
@@ -22,6 +24,14 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     @Override
     public void onDisable() {
 
+    }
+    
+    public String getJoinMessage(){
+        return this.joinmessage;
+    }
+    
+    public String getQuitMessage(){
+        return this.quitmessage;
     }
 
     public static JoinAndQuitMessages getInstance(){
