@@ -9,13 +9,18 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     
     @Override
     public void onEnable() {
-        instance =this;
+        instance = this;
 
         if(!getConfig().contains("joinmessage")){
             getConfig().set("joinmessage","&7[&2+&7]&4%player%");
+            saveConfig();
+        }
+        
+        if(!getConfig().contains("quitmessage")){
             getConfig().set("quitmessage","&7[&4-&7]&4%player%");
             saveConfig();
         }
+        
         joinmessage = getConfig().getString("joinmessage");
         quitmessage = getConfig().getString("quitmessage");
         getServer().getPluginManager().registerEvents(new JoinAndQuitListener(),this);
