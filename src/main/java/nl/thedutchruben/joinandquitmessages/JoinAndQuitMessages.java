@@ -1,5 +1,6 @@
 package nl.thedutchruben.joinandquitmessages;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JoinAndQuitMessages extends JavaPlugin {
@@ -16,6 +17,8 @@ public final class JoinAndQuitMessages extends JavaPlugin {
         }
         joinmessage = getConfig().getString("joinmessage");
         quitmessage = getConfig().getString("quitmessage");
+        new Metrics(this, 15516);
+
         getServer().getPluginManager().registerEvents(new JoinAndQuitListener(),this);
     }
 

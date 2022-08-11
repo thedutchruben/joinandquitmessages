@@ -5,3 +5,5 @@ prefix: J&Q Messages
 authors: [TheDutchRuben]
 description: Join and Quit messages plugin
 website: www.thedutchruben.nl
+softdepend:
+  - PlaceHolderAPI
