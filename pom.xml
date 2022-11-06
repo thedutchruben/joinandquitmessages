@@ -6,7 +6,7 @@
 
     <groupId>nl.thedutchruben</groupId>
     <artifactId>JoinAndQuitMessages</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
 
     <name>JoinAndQuitMessages</name>
@@ -92,6 +92,12 @@
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>nl.thedutchruben</groupId>
+            <artifactId>mccore</artifactId>
+            <version>1.2.6</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

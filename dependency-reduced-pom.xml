@@ -4,7 +4,7 @@
   <groupId>nl.thedutchruben</groupId>
   <artifactId>JoinAndQuitMessages</artifactId>
   <name>JoinAndQuitMessages</name>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2.0</version>
   <description>Join and Quit messages plugin</description>
   <url>www.thedutchruben.nl</url>
   <build>

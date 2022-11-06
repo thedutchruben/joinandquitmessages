@@ -1,6 +1,7 @@
 package nl.thedutchruben.joinandquitmessages;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import nl.thedutchruben.mccore.spigot.listeners.TDRListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 
 import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
+@TDRListener
 public class JoinAndQuitListener implements Listener {
 
     @EventHandler

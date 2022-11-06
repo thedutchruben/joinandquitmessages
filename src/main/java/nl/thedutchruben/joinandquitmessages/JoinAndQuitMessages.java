@@ -1,5 +1,7 @@
 package nl.thedutchruben.joinandquitmessages;
 
+import nl.thedutchruben.mccore.Mccore;
+import nl.thedutchruben.mccore.config.UpdateCheckerConfig;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
@@ -26,9 +28,10 @@ public final class JoinAndQuitMessages extends JavaPlugin {
 
         if(!getConfig().contains("version")){
             getConfig().set("version","1.1");
+            getConfig().set("update_check",true);
             getConfig().set("random.enabled",false);
-            getConfig().set("random.messages.join", Arrays.asList("&7[&2+&7]&4%player%", "&4%player% has joined the server"));
-            getConfig().set("random.messages.leave", Arrays.asList("&7[&4-&7]&4%player", "&4%player% has left the server"));
+            getConfig().set("random.messages.join", Arrays.asList("&7[&2+&7]&4%player%", "&4%player% &7has joined the server"));
+            getConfig().set("random.messages.leave", Arrays.asList("&7[&4-&7]&4%player%", "&4%player% &7has left the server"));
             saveConfig();
         }
 
@@ -38,7 +41,14 @@ public final class JoinAndQuitMessages extends JavaPlugin {
 
         Metrics metrics = new Metrics(this, 15516);
         metrics.addCustomChart(new SimplePie("random_messages", () -> String.valueOf(randomMessages)));
-        getServer().getPluginManager().registerEvents(new JoinAndQuitListener(),this);
+        metrics.addCustomChart(new SimplePie("download_source", DownloadSource.GITHUB::name));
+        metrics.addCustomChart(new SimplePie("update_checker", () -> String.valueOf(getConfig().getBoolean("update_check", true))));
+
+        Mccore mccore = new Mccore(this,"joinandquitmessages","63681520254bd4f432001af8", Mccore.PluginType.SPIGOT);
+        // Start the update checker if enabled.
+        if (getConfig().getBoolean("update_check", true)) {
+            mccore.startUpdateChecker(new UpdateCheckerConfig("joinandquitmessages.checkupdate",20*60*5));
+        }
     }
 
     @Override
@@ -67,5 +77,11 @@ public final class JoinAndQuitMessages extends JavaPlugin {
             return array.get(randomIndex);
         }
         return defaultJoinMessage;
+    }
+
+    enum DownloadSource {
+        SPIGOT,
+        BUKKIT,
+        GITHUB
     }
 }
