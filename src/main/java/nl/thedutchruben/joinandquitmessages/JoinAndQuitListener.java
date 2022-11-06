@@ -16,7 +16,7 @@ public class JoinAndQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        String joinText = JoinAndQuitMessages.getInstance().joinmessage.replace('&','§').replace("%player%",event.getPlayer().getName());
+        String joinText = JoinAndQuitMessages.getInstance().getJoinMessage(event.getPlayer()).replace('&','§').replace("%player%",event.getPlayer().getName());
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(),joinText);
         }
@@ -29,7 +29,7 @@ public class JoinAndQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event){
-        String quitMessage = JoinAndQuitMessages.getInstance().quitmessage.replace('&','§').replace("%player%",event.getPlayer().getName());
+        String quitMessage = JoinAndQuitMessages.getInstance().getQuitMessage(event.getPlayer()).replace('&','§').replace("%player%",event.getPlayer().getName());
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             quitMessage = PlaceholderAPI.setPlaceholders(event.getPlayer(),quitMessage);
         }
