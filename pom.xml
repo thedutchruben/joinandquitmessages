@@ -73,6 +73,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+         <repository>
+            <id>thedutchruben-repo</id>
+              <url>https://maven.thedutchservers.com/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -97,8 +101,8 @@
         <dependency>
             <groupId>nl.thedutchruben</groupId>
             <artifactId>mccore</artifactId>
-            <version>1.2.6</version>
-            <scope>compile</scope>
+            <version>1.4.7</version>
+            <scope>compiled</scope>
         </dependency>
     </dependencies>
 </project>
