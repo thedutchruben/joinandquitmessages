@@ -101,7 +101,7 @@
         <dependency>
             <groupId>nl.thedutchruben</groupId>
             <artifactId>mccore</artifactId>
-            <version>1.4.7</version>
+            <version>1.7.0</version>
             <scope>compiled</scope>
         </dependency>
     </dependencies>
