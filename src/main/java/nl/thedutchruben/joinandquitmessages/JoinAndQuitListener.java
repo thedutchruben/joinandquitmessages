@@ -18,9 +18,11 @@ public class JoinAndQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        String joinText = JoinAndQuitMessages.getInstance().getJoinMessage(event.getPlayer()).replace('&','§').replace("%player%",event.getPlayer().getName());
+        String joinText = JoinAndQuitMessages.getInstance().getJoinMessage()
+                .replace('&','§')
+                .replace("%player%", event.getPlayer().getName());
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
-            joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(),joinText);
+            joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(), joinText);
         }
         String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         if(Integer.parseInt(split[1]) >= 16) {
@@ -31,9 +33,11 @@ public class JoinAndQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event){
-        String quitMessage = JoinAndQuitMessages.getInstance().getQuitMessage(event.getPlayer()).replace('&','§').replace("%player%",event.getPlayer().getName());
+        String quitMessage = JoinAndQuitMessages.getInstance().getQuitMessage()
+                .replace('&','§')
+                .replace("%player%", event.getPlayer().getName());
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
-            quitMessage = PlaceholderAPI.setPlaceholders(event.getPlayer(),quitMessage);
+            quitMessage = PlaceholderAPI.setPlaceholders(event.getPlayer(), quitMessage);
         }
         String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         if(Integer.parseInt(split[1]) >= 16) {
