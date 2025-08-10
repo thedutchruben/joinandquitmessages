@@ -4,11 +4,14 @@ import nl.thedutchruben.mccore.Mccore;
 import nl.thedutchruben.mccore.config.UpdateCheckerConfig;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -16,6 +19,9 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     private static JoinAndQuitMessages instance;
     public String defaultJoinMessage,defaultQuitMessage;
     public boolean randomMessages;
+    public boolean permissionMessagesEnabled;
+    private Map<String, String> cachedJoinMessages = new HashMap<>();
+    private Map<String, String> cachedQuitMessages = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -39,16 +45,35 @@ public final class JoinAndQuitMessages extends JavaPlugin {
         // Add permission-based messages configuration
         if(!getConfig().contains("permission_messages.enabled")){
             getConfig().set("permission_messages.enabled", false);
-            getConfig().set("permission_messages.join.joinandquitmessages.vip", "&7[&6VIP+&7]&6%player%");
-            getConfig().set("permission_messages.join.joinandquitmessages.premium", "&7[&5PREMIUM+&7]&5%player%");
-            getConfig().set("permission_messages.leave.joinandquitmessages.vip", "&7[&6VIP-&7]&6%player%");
-            getConfig().set("permission_messages.leave.joinandquitmessages.premium", "&7[&5PREMIUM-&7]&5%player%");
+            
+            // Create the sections first
+            getConfig().createSection("permission_messages.join");
+            getConfig().createSection("permission_messages.leave");
+            
+            // Set permission messages using the section
+            ConfigurationSection joinSection = getConfig().getConfigurationSection("permission_messages.join");
+            ConfigurationSection leaveSection = getConfig().getConfigurationSection("permission_messages.leave");
+            
+            if (joinSection != null) {
+                joinSection.set("joinandquitmessages.vip", "&7[&6VIP+&7]&6%player%");
+                joinSection.set("joinandquitmessages.premium", "&7[&5PREMIUM+&7]&5%player%");
+            }
+            
+            if (leaveSection != null) {
+                leaveSection.set("joinandquitmessages.vip", "&7[&6VIP-&7]&6%player%");
+                leaveSection.set("joinandquitmessages.premium", "&7[&5PREMIUM-&7]&5%player%");
+            }
+            
             saveConfig();
         }
 
         defaultJoinMessage = getConfig().getString("joinmessage");
         defaultQuitMessage = getConfig().getString("quitmessage");
         randomMessages = getConfig().getBoolean("random.enabled");
+        permissionMessagesEnabled = getConfig().getBoolean("permission_messages.enabled", false);
+        
+        // Load permission messages into cache
+        loadPermissionMessagesCache();
 
         Metrics metrics = new Metrics(this, 15516);
         metrics.addCustomChart(new SimplePie("random_messages", () -> String.valueOf(randomMessages)));
@@ -83,20 +108,12 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     }
 
     public String getQuitMessage(Player player) {
-        // Check if permission-based messages are enabled
-        if (getConfig().getBoolean("permission_messages.enabled", false)) {
-            var leaveSection = getConfig().getConfigurationSection("permission_messages.leave");
-            if (leaveSection != null) {
-                Set<String> permissionKeys = leaveSection.getKeys(false);
-                
-                // Find the highest priority permission (check in reverse order)
-                for (String permission : permissionKeys) {
-                    if (player.hasPermission(permission)) {
-                        String message = getConfig().getString("permission_messages.leave." + permission);
-                        if (message != null && !message.isEmpty()) {
-                            return message;
-                        }
-                    }
+        // Check if permission-based messages are enabled (use cached value)
+        if (permissionMessagesEnabled && !cachedQuitMessages.isEmpty()) {
+            // Find the highest priority permission from cached messages
+            for (String permission : cachedQuitMessages.keySet()) {
+                if (player.hasPermission(permission)) {
+                    return cachedQuitMessages.get(permission);
                 }
             }
         }
@@ -117,20 +134,12 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     }
 
     public String getJoinMessage(Player player) {
-        // Check if permission-based messages are enabled
-        if (getConfig().getBoolean("permission_messages.enabled", false)) {
-            var joinSection = getConfig().getConfigurationSection("permission_messages.join");
-            if (joinSection != null) {
-                Set<String> permissionKeys = joinSection.getKeys(false);
-                
-                // Find the highest priority permission (check in reverse order)
-                for (String permission : permissionKeys) {
-                    if (player.hasPermission(permission)) {
-                        String message = getConfig().getString("permission_messages.join." + permission);
-                        if (message != null && !message.isEmpty()) {
-                            return message;
-                        }
-                    }
+        // Check if permission-based messages are enabled (use cached value)
+        if (permissionMessagesEnabled && !cachedJoinMessages.isEmpty()) {
+            // Find the highest priority permission from cached messages
+            for (String permission : cachedJoinMessages.keySet()) {
+                if (player.hasPermission(permission)) {
+                    return cachedJoinMessages.get(permission);
                 }
             }
         }
@@ -144,6 +153,40 @@ public final class JoinAndQuitMessages extends JavaPlugin {
         defaultJoinMessage = getConfig().getString("joinmessage");
         defaultQuitMessage = getConfig().getString("quitmessage");
         randomMessages = getConfig().getBoolean("random.enabled");
+        permissionMessagesEnabled = getConfig().getBoolean("permission_messages.enabled", false);
+        
+        // Reload all permission messages into cache
+        loadPermissionMessagesCache();
+    }
+    
+    private void loadPermissionMessagesCache() {
+        // Clear existing cache
+        cachedJoinMessages.clear();
+        cachedQuitMessages.clear();
+        
+        if (permissionMessagesEnabled) {
+            // Load join messages
+            ConfigurationSection joinSection = getConfig().getConfigurationSection("permission_messages.join");
+            if (joinSection != null) {
+                for (String permission : joinSection.getKeys(false)) {
+                    String message = joinSection.getString(permission);
+                    if (message != null && !message.isEmpty()) {
+                        cachedJoinMessages.put(permission, message);
+                    }
+                }
+            }
+            
+            // Load quit messages  
+            ConfigurationSection leaveSection = getConfig().getConfigurationSection("permission_messages.leave");
+            if (leaveSection != null) {
+                for (String permission : leaveSection.getKeys(false)) {
+                    String message = leaveSection.getString(permission);
+                    if (message != null && !message.isEmpty()) {
+                        cachedQuitMessages.put(permission, message);
+                    }
+                }
+            }
+        }
     }
 
     enum DownloadSource {
