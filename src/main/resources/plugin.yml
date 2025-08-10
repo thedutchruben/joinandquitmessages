@@ -6,3 +6,13 @@ authors: [TheDutchRuben]
 description: Join and Quit messages plugin
 softdepend:
   - PlaceHolderAPI
+permissions:
+  joinandquitmessages.use:
+    description: Allows using the main command
+    default: true
+  joinandquitmessages.test:
+    description: Allows testing join messages
+    default: true
+  joinandquitmessages.reload:
+    description: Allows reloading the plugin configuration
+    default: op

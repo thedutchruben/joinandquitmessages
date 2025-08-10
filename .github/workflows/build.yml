@@ -1,0 +1,74 @@
+name: Build Plugin for Different Sources
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        source:
+          - name: "GitHub"
+            value: "GITHUB"
+            artifact: "JoinAndQuitMessages-GitHub"
+          - name: "Spigot"
+            value: "SPIGOT"
+            artifact: "JoinAndQuitMessages-Spigot"
+          - name: "Bukkit"
+            value: "BUKKIT"
+            artifact: "JoinAndQuitMessages-Bukkit"
+          - name: "Modrinth"
+            value: "MODRINTH"
+            artifact: "JoinAndQuitMessages-Modrinth"
+
+    name: Build for ${{ matrix.source.name }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+        
+    - name: Build with Maven
+      run: mvn clean package -DskipTests -Ddownload.source=${{ matrix.source.value }}
+      
+    - name: Get project version
+      run: echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      
+    - name: Rename artifact
+      run: |
+        mv target/JoinAndQuitMessages-*.jar target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}
+        path: target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
+        
+    - name: Upload to release (on release)
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
+        asset_name: ${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
+        asset_content_type: application/java-archive
