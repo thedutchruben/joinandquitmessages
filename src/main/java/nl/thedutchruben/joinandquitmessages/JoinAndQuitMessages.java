@@ -85,12 +85,18 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     public String getQuitMessage(Player player) {
         // Check if permission-based messages are enabled
         if (getConfig().getBoolean("permission_messages.enabled", false)) {
-            Set<String> permissionKeys = getConfig().getConfigurationSection("permission_messages.leave").getKeys(false);
-            
-            // Find the highest priority permission (check in reverse order)
-            for (String permission : permissionKeys) {
-                if (player.hasPermission(permission)) {
-                    return getConfig().getString("permission_messages.leave." + permission);
+            var leaveSection = getConfig().getConfigurationSection("permission_messages.leave");
+            if (leaveSection != null) {
+                Set<String> permissionKeys = leaveSection.getKeys(false);
+                
+                // Find the highest priority permission (check in reverse order)
+                for (String permission : permissionKeys) {
+                    if (player.hasPermission(permission)) {
+                        String message = getConfig().getString("permission_messages.leave." + permission);
+                        if (message != null && !message.isEmpty()) {
+                            return message;
+                        }
+                    }
                 }
             }
         }
@@ -113,12 +119,18 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     public String getJoinMessage(Player player) {
         // Check if permission-based messages are enabled
         if (getConfig().getBoolean("permission_messages.enabled", false)) {
-            Set<String> permissionKeys = getConfig().getConfigurationSection("permission_messages.join").getKeys(false);
-            
-            // Find the highest priority permission (check in reverse order)
-            for (String permission : permissionKeys) {
-                if (player.hasPermission(permission)) {
-                    return getConfig().getString("permission_messages.join." + permission);
+            var joinSection = getConfig().getConfigurationSection("permission_messages.join");
+            if (joinSection != null) {
+                Set<String> permissionKeys = joinSection.getKeys(false);
+                
+                // Find the highest priority permission (check in reverse order)
+                for (String permission : permissionKeys) {
+                    if (player.hasPermission(permission)) {
+                        String message = getConfig().getString("permission_messages.join." + permission);
+                        if (message != null && !message.isEmpty()) {
+                            return message;
+                        }
+                    }
                 }
             }
         }
