@@ -4,7 +4,7 @@
   <groupId>nl.thedutchruben</groupId>
   <artifactId>JoinAndQuitMessages</artifactId>
   <name>JoinAndQuitMessages</name>
-  <version>1.2.0</version>
+  <version>1.4.0</version>
   <description>Join and Quit messages plugin</description>
   <url>www.thedutchruben.nl</url>
   <build>
@@ -18,15 +18,39 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.13.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <version>1.5.3</version>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includes>
+            <include>${project.basedir}/src/main/java/nl/thedutchruben/joinandquitmessages/JoinAndQuitMessages.java</include>
+          </includes>
+          <replacements>
+            <replacement>
+              <token>DownloadSource\.GITHUB</token>
+              <value>DownloadSource.${download.source}</value>
+            </replacement>
+          </replacements>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -59,22 +83,27 @@
       <id>placeholderapi</id>
       <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
+    <repository>
+      <id>thedutchruben-repo</id>
+      <url>https://maven.thedutchservers.com/releases</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.19-R0.1-SNAPSHOT</version>
+      <version>1.21.5-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>me.clip</groupId>
       <artifactId>placeholderapi</artifactId>
-      <version>2.11.2</version>
+      <version>2.11.6</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <download.source>GITHUB</download.source>
   </properties>
 </project>

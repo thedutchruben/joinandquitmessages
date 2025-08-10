@@ -6,6 +6,24 @@ authors: [TheDutchRuben]
 description: Join and Quit messages plugin
 softdepend:
   - PlaceHolderAPI
+commands:
+    joinandquitmessages:
+        description: Main command for Join and Quit messages
+        usage: /joinandquitmessages <subcommand>
+        aliases: [jqm, jqmessages]
+        permission: joinandquitmessages.use
+        permission-message: You do not have permission to use this command.
+        subcommands:
+        test:
+            description: Test the join message
+            usage: /joinandquitmessages test
+            permission: joinandquitmessages.test
+            permission-message: You do not have permission to test the join message.
+        reload:
+            description: Reload the plugin configuration
+            usage: /joinandquitmessages reload
+            permission: joinandquitmessages.reload
+            permission-message: You do not have permission to reload the plugin configuration.
 permissions:
   joinandquitmessages.use:
     description: Allows using the main command

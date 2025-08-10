@@ -15,7 +15,11 @@ import java.util.regex.Pattern;
 
 import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
-@Command(command = "joinandquitmessages", description = "JoinAndQuitMessages plugin commands", permission = "joinandquitmessages.use", aliases = {"jqm"})
+@Command(
+        command = "joinandquitmessages",
+        description = "JoinAndQuitMessages plugin commands",
+        permission = "joinandquitmessages.use",
+        aliases = {"jqm"})
 public class JoinAndQuitCommand {
 
     @Default
@@ -23,7 +27,11 @@ public class JoinAndQuitCommand {
         sender.sendMessage(ChatColor.RED + "Usage: /joinandquitmessages <test [message]|reload>");
     }
 
-    @SubCommand(subCommand = "test", description = "Test a join message (current config or custom message)", permission = "joinandquitmessages.test")
+    @SubCommand(
+            subCommand = "test",
+            description = "Test a join message (current config or custom message)",
+            permission = "joinandquitmessages.test",
+            maxParams = 2)
     public void testCommand(CommandSender sender, List<String> args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "This command can only be used by players!");
