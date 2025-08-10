@@ -57,18 +57,15 @@ jobs:
         mv target/JoinAndQuitMessages-*.jar target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
         
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}
         path: target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
         
     - name: Upload to release (on release)
       if: github.event_name == 'release'
-      uses: actions/upload-release-asset@v1
+      uses: softprops/action-gh-release@v1
+      with:
+        files: target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
-        asset_name: ${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
-        asset_content_type: application/java-archive
