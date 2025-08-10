@@ -138,6 +138,8 @@ public final class JoinAndQuitMessages extends JavaPlugin {
         if (permissionMessagesEnabled && !cachedJoinMessages.isEmpty()) {
             // Find the highest priority permission from cached messages
             for (String permission : cachedJoinMessages.keySet()) {
+                System.out.println("Checking permission: " + permission + " for player: " + player.getName());
+                System.out.println(cachedJoinMessages.get(permission));
                 if (player.hasPermission(permission)) {
                     return cachedJoinMessages.get(permission);
                 }
@@ -168,23 +170,29 @@ public final class JoinAndQuitMessages extends JavaPlugin {
             // Load join messages
             ConfigurationSection joinSection = getConfig().getConfigurationSection("permission_messages.join");
             if (joinSection != null) {
-                for (String permission : joinSection.getKeys(false)) {
-                    String message = joinSection.getString(permission);
-                    if (message != null && !message.isEmpty()) {
-                        cachedJoinMessages.put(permission, message);
-                    }
-                }
+                loadMessagesFromSection(joinSection, cachedJoinMessages, "");
             }
             
             // Load quit messages  
             ConfigurationSection leaveSection = getConfig().getConfigurationSection("permission_messages.leave");
             if (leaveSection != null) {
-                for (String permission : leaveSection.getKeys(false)) {
-                    String message = leaveSection.getString(permission);
-                    if (message != null && !message.isEmpty()) {
-                        cachedQuitMessages.put(permission, message);
-                    }
-                }
+                loadMessagesFromSection(leaveSection, cachedQuitMessages, "");
+            }
+        }
+    }
+    
+    private void loadMessagesFromSection(ConfigurationSection section, Map<String, String> cache, String parentKey) {
+        for (String key : section.getKeys(false)) {
+            String fullKey = parentKey.isEmpty() ? key : parentKey + "." + key;
+            Object value = section.get(key);
+            
+            if (value instanceof String) {
+                // This is a message string
+                cache.put(fullKey, (String) value);
+                System.out.println("Loaded message for permission: " + fullKey + " -> " + value);
+            } else if (value instanceof ConfigurationSection) {
+                // This is a nested section, recurse into it
+                loadMessagesFromSection((ConfigurationSection) value, cache, fullKey);
             }
         }
     }
