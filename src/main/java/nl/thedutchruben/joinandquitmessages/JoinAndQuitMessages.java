@@ -138,8 +138,6 @@ public final class JoinAndQuitMessages extends JavaPlugin {
         if (permissionMessagesEnabled && !cachedJoinMessages.isEmpty()) {
             // Find the highest priority permission from cached messages
             for (String permission : cachedJoinMessages.keySet()) {
-                System.out.println("Checking permission: " + permission + " for player: " + player.getName());
-                System.out.println(cachedJoinMessages.get(permission));
                 if (player.hasPermission(permission)) {
                     return cachedJoinMessages.get(permission);
                 }
@@ -189,7 +187,6 @@ public final class JoinAndQuitMessages extends JavaPlugin {
             if (value instanceof String) {
                 // This is a message string
                 cache.put(fullKey, (String) value);
-                System.out.println("Loaded message for permission: " + fullKey + " -> " + value);
             } else if (value instanceof ConfigurationSection) {
                 // This is a nested section, recurse into it
                 loadMessagesFromSection((ConfigurationSection) value, cache, fullKey);
