@@ -57,7 +57,7 @@ jobs:
         mv target/JoinAndQuitMessages-*.jar target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
         
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}
         path: target/${{ matrix.source.artifact }}-${{ env.PROJECT_VERSION }}.jar
