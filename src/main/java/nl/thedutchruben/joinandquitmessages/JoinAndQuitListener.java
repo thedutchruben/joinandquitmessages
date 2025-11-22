@@ -3,11 +3,13 @@ package nl.thedutchruben.joinandquitmessages;
 import me.clip.placeholderapi.PlaceholderAPI;
 import nl.thedutchruben.mccore.spigot.listeners.TDRListener;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +22,10 @@ public class JoinAndQuitListener implements Listener {
     public void onJoin(PlayerJoinEvent event){
         String joinText = JoinAndQuitMessages.getInstance().getJoinMessage(event.getPlayer())
                 .replace('&','§')
-                .replace("%player%", event.getPlayer().getName());
+                .replace("%player%", event.getPlayer().getName())
+                .replace("%world%", event.getPlayer().getWorld().getName())
+                .replace("%playercount_online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
+                .replace("%playercount_max%", String.valueOf(Bukkit.getMaxPlayers()));
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(), joinText);
         }
@@ -28,14 +33,26 @@ public class JoinAndQuitListener implements Listener {
         if(Integer.parseInt(split[1]) >= 16) {
             joinText = translateHexColorCodes("<",">", joinText);
         }
-        event.setJoinMessage(joinText);
+
+        event.setJoinMessage(null);
+
+        Bukkit.getLogger().log(Level.INFO, joinText);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.canSee(event.getPlayer())) {
+                onlinePlayer.sendMessage(joinText);
+            }
+        }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event){
         String quitMessage = JoinAndQuitMessages.getInstance().getQuitMessage(event.getPlayer())
                 .replace('&','§')
-                .replace("%player%", event.getPlayer().getName());
+                .replace("%player%", event.getPlayer().getName())
+                .replace("%world%", event.getPlayer().getWorld().getName())
+                .replace("%playercount_online%", String.valueOf(Bukkit.getOnlinePlayers().size() - 1))
+                .replace("%playercount_max%", String.valueOf(Bukkit.getMaxPlayers()));
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             quitMessage = PlaceholderAPI.setPlaceholders(event.getPlayer(), quitMessage);
         }
@@ -43,7 +60,16 @@ public class JoinAndQuitListener implements Listener {
         if(Integer.parseInt(split[1]) >= 16) {
             quitMessage = translateHexColorCodes("<",">", quitMessage);
         }
-        event.setQuitMessage(quitMessage);
+
+        event.setQuitMessage(null);
+
+        Bukkit.getLogger().log(Level.INFO, quitMessage);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.canSee(event.getPlayer())) {
+                onlinePlayer.sendMessage(quitMessage);
+            }
+        }
     }
 
     public String translateHexColorCodes(String startTag, String endTag, String message)

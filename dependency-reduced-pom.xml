@@ -4,7 +4,7 @@
   <groupId>nl.thedutchruben</groupId>
   <artifactId>JoinAndQuitMessages</artifactId>
   <name>JoinAndQuitMessages</name>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
   <description>Join and Quit messages plugin</description>
   <url>www.thedutchruben.nl</url>
   <build>
@@ -92,7 +92,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.21.5-R0.1-SNAPSHOT</version>
+      <version>1.21.8-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

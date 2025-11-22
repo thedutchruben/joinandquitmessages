@@ -77,7 +77,7 @@ public final class JoinAndQuitMessages extends JavaPlugin {
 
         Metrics metrics = new Metrics(this, 15516);
         metrics.addCustomChart(new SimplePie("random_messages", () -> String.valueOf(randomMessages)));
-        metrics.addCustomChart(new SimplePie("download_source", DownloadSource.GITHUB::name));
+        metrics.addCustomChart(new SimplePie("download_source", DownloadSource.MODRINTH::name));
         metrics.addCustomChart(new SimplePie("update_checker", () -> String.valueOf(getConfig().getBoolean("update_check", true))));
 
         Mccore mccore = new Mccore(this,"joinandquitmessages","63681520254bd4f432001af8", Mccore.PluginType.SPIGOT);

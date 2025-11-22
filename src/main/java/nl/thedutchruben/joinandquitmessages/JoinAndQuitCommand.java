@@ -53,7 +53,11 @@ public class JoinAndQuitCommand {
         }
         
         // Apply formatting
-        joinMessage = joinMessage.replace('&', '§').replace("%player%", player.getName());
+        joinMessage = joinMessage.replace('&', '§')
+                .replace("%player%", player.getName())
+                .replace("%world%", player.getWorld().getName())
+                .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
+                .replace("%max%", String.valueOf(Bukkit.getMaxPlayers()));
         
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             joinMessage = PlaceholderAPI.setPlaceholders(player, joinMessage);
