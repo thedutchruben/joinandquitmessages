@@ -29,7 +29,7 @@ public final class JoinAndQuitMessages extends JavaPlugin {
         if(!getConfig().contains("joinmessage")){
             getConfig().set("joinmessage", "&7[&2+&7]&4%player%");
             getConfig().set("quitmessage", "&7[&4-&7]&4%player%");
-            getConfig().set("joinandquit.enabled", false);
+            getConfig().set("joinandquit.enabled", true);
             saveConfig();
         }
 
