@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 public final class JoinAndQuitMessages extends JavaPlugin {
     private static JoinAndQuitMessages instance;
@@ -30,6 +29,7 @@ public final class JoinAndQuitMessages extends JavaPlugin {
         if(!getConfig().contains("joinmessage")){
             getConfig().set("joinmessage", "&7[&2+&7]&4%player%");
             getConfig().set("quitmessage", "&7[&4-&7]&4%player%");
+            getConfig().set("joinandquit.enabled", true);
             saveConfig();
         }
 
@@ -97,14 +97,16 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     }
 
     public String getQuitMessage() {
-        if (randomMessages) {
-            List<String> array = getConfig().getStringList("random.messages.leave");
-            Random generator = new Random();
-            int randomIndex = generator.nextInt(array.size());
-            return array.get(randomIndex);
-        }
+    if (!getConfig().getBoolean("joinandquit.enabled")) return "";
 
-        return defaultQuitMessage;
+    if (randomMessages) {
+        List<String> array = getConfig().getStringList("random.messages.leave");
+        Random generator = new Random();
+        int randomIndex = generator.nextInt(array.size());
+        return array.get(randomIndex);
+    }
+
+    return defaultQuitMessage;
     }
 
     public String getQuitMessage(Player player) {
@@ -123,14 +125,16 @@ public final class JoinAndQuitMessages extends JavaPlugin {
     }
 
     public String getJoinMessage() {
-        if (randomMessages) {
-            List<String> array = getConfig().getStringList("random.messages.join");
-            Random generator = new Random();
-            int randomIndex = generator.nextInt(array.size());
-            return array.get(randomIndex);
-        }
+    if (!getConfig().getBoolean("joinandquit.enabled")) return "";
 
-        return defaultJoinMessage;
+    if (randomMessages) {
+        List<String> array = getConfig().getStringList("random.messages.join");
+        Random generator = new Random();
+        int randomIndex = generator.nextInt(array.size());
+        return array.get(randomIndex);
+    }
+
+    return defaultJoinMessage;
     }
 
     public String getJoinMessage(Player player) {

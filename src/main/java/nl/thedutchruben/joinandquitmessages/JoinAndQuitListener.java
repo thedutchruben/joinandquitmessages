@@ -20,15 +20,25 @@ public class JoinAndQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        String joinText = JoinAndQuitMessages.getInstance().getJoinMessage(event.getPlayer())
+        String raw = JoinAndQuitMessages.getInstance().getJoinMessage(event.getPlayer());
+
+        // If disabled or no message, do nothing
+        if (raw == null || raw.isEmpty()) {
+            event.setJoinMessage(null);
+            return;
+        }
+
+        String joinText = raw
                 .replace('&','§')
                 .replace("%player%", event.getPlayer().getName())
                 .replace("%world%", event.getPlayer().getWorld().getName())
                 .replace("%playercount_online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
                 .replace("%playercount_max%", String.valueOf(Bukkit.getMaxPlayers()));
+
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             joinText = PlaceholderAPI.setPlaceholders(event.getPlayer(), joinText);
         }
+
         String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         if(Integer.parseInt(split[1]) >= 16) {
             joinText = translateHexColorCodes("<",">", joinText);
@@ -47,15 +57,25 @@ public class JoinAndQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event){
-        String quitMessage = JoinAndQuitMessages.getInstance().getQuitMessage(event.getPlayer())
+        String raw = JoinAndQuitMessages.getInstance().getQuitMessage(event.getPlayer());
+
+        // If disabled or no message, do nothing
+        if (raw == null || raw.isEmpty()) {
+            event.setQuitMessage(null);
+            return;
+        }
+
+        String quitMessage = raw
                 .replace('&','§')
                 .replace("%player%", event.getPlayer().getName())
                 .replace("%world%", event.getPlayer().getWorld().getName())
                 .replace("%playercount_online%", String.valueOf(Bukkit.getOnlinePlayers().size() - 1))
                 .replace("%playercount_max%", String.valueOf(Bukkit.getMaxPlayers()));
+
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             quitMessage = PlaceholderAPI.setPlaceholders(event.getPlayer(), quitMessage);
         }
+
         String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         if(Integer.parseInt(split[1]) >= 16) {
             quitMessage = translateHexColorCodes("<",">", quitMessage);
@@ -71,6 +91,7 @@ public class JoinAndQuitListener implements Listener {
             }
         }
     }
+
 
     public String translateHexColorCodes(String startTag, String endTag, String message)
     {
