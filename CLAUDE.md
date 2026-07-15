@@ -31,9 +31,9 @@ The default goal is set to `clean package`, so running `mvn` without arguments w
 
 ### Dependencies
 
-- **Spigot API 1.21.5**: Core Minecraft server API (provided)
-- **PlaceholderAPI 2.11.6**: Placeholder expansion (provided, optional)
-- **bStats 3.0.3**: Plugin statistics (shaded)
+- **Spigot API 26.2**: Core Minecraft server API (provided)
+- **PlaceholderAPI 2.12.3**: Placeholder expansion (provided, optional)
+- **bStats 3.2.1**: Plugin statistics (shaded)
 - **mccore 1.7.0**: Update checker and utilities (compiled)
 
 ### Configuration Structure
