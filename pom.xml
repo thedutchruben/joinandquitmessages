@@ -99,8 +99,8 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
          <repository>
-            <id>thedutchruben-repo</id>
-              <url>https://maven.thedutchservers.com/releases</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/thedutchruben/tdr-mc-core</url>
         </repository>
     </repositories>
 
